@@ -2,6 +2,9 @@ FROM python:3.12-bookworm
 
 WORKDIR /app
 
+RUN sed -i 's|http://deb.debian.org|https://deb.debian.org|g' \
+    /etc/apt/sources.list.d/debian.sources || true
+
 RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     gcc \
