@@ -1,0 +1,22 @@
+<h1>Student Management</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input name="name" placeholder="Name">
+    <input name="email" placeholder="Email">
+
+    <button type="submit">
+        Add Student
+    </button>
+</form>
+
+<hr>
+
+{% for student in students %}
+    <p>
+        {{ student.name }}
+        -
+        {{ student.email }}
+    </p>
+{% endfor %}
