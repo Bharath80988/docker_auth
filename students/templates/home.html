@@ -1,22 +1,197 @@
-<h1>Student Management</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    <style>
+        /* Modern Reset & Variables */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<form method="POST">
-    {% csrf_token %}
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    <input name="name" placeholder="Name">
-    <input name="email" placeholder="Email">
+        /* Main Container Card */
+        .container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
 
-    <button type="submit">
-        Add Student
-    </button>
-</form>
+        h1 {
+            color: #1e293b;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
 
-<hr>
+        /* Form Layout */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-{% for student in students %}
-    <p>
-        {{ student.name }}
-        -
-        {{ student.email }}
-    </p>
-{% endfor %}
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #334155;
+            background-color: #f8fafc;
+            outline: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+        }
+
+        /* Submit Button Styling */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3b82f6;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            margin-top: 4px;
+        }
+
+        button:hover {
+            background-color: #2563eb;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Divider */
+        hr {
+            border: 0;
+            height: 1px;
+            background: #e2e8f0;
+            margin: 28px 0;
+        }
+
+        /* Student List Elements */
+        .student-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        /* Custom scrollbar for list if it gets long */
+        .student-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .student-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .student-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #e2e8f0;
+            transition: all 0.2s ease;
+            animation: slideUp 0.3s ease-out forwards;
+        }
+
+        .student-card:hover {
+            border-left-color: #3b82f6;
+            background: #f1f5f9;
+            transform: translateX(2px);
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        .student-email {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            padding: 16px;
+        }
+
+        /* Entry Animation */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Student Management</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Full Name" required autocomplete="off">
+            <input type="email" name="email" placeholder="Email Address" required autocomplete="off">
+            <button type="submit">Add Student</button>
+        </form>
+
+        <hr>
+
+        <div class="student-list">
+            {% for student in students %}
+                <div class="student-card">
+                    <span class="student-name">{{ student.name }}</span>
+                    <span class="student-email">{{ student.email }}</span>
+                </div>
+            {% empty %}
+                <p class="empty-state">No students registered yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>
