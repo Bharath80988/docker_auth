@@ -11,9 +11,11 @@ class Command(BaseCommand):
 
         for _ in range(5):
 
-            Student.objects.create(
-                name=fake.name(),
-                email=fake.email()
+            Student.objects.get_or_create(
+                email=fake.email(),
+                defaults={
+                    "name": fake.name()
+                }
             )
 
         self.stdout.write(
