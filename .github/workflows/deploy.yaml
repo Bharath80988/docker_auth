@@ -1,0 +1,100 @@
+name: Django Docker Railway Test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: STEP 1 - Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: STEP 2 - Print Current Directory
+        run: |
+          echo "Current Directory:"
+          pwd
+
+      - name: STEP 3 - List Project Files
+        run: |
+          echo "Project Files:"
+          ls -la
+
+      - name: STEP 4 - Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: STEP 5 - Verify Python
+        run: |
+          python --version
+          pip --version
+
+      - name: STEP 6 - Install Dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: STEP 7 - Print Installed Packages
+        run: |
+          pip list
+
+      - name: STEP 8 - Check Django Project
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+        run: |
+          echo "Running Django Check..."
+          python manage.py check
+
+      - name: STEP 9 - Run Migrations
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+        run: |
+          echo "Running Migrations..."
+          python manage.py migrate
+
+      - name: STEP 10 - Create Users
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+        run: |
+          echo "Creating Users..."
+          python manage.py create_users
+
+      - name: STEP 11 - Build Docker Image
+        run: |
+          echo "Building Docker Image..."
+          docker build -t docker_sms .
+
+      - name: STEP 12 - Show Docker Images
+        run: |
+          docker images
+
+      - name: STEP 13 - Sleep for Visibility
+        run: |
+          echo "Waiting 15 seconds..."
+          sleep 15
+
+      - name: STEP 14 - Workflow Complete
+        run: |
+          echo "===================================="
+          echo "GitHub Action Completed Successfully"
+          echo "===================================="
